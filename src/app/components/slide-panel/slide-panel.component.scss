@@ -1,0 +1,446 @@
+// ──────────────────────────────────────────────
+// Design tokens
+// ──────────────────────────────────────────────
+
+$primary: #4C35E0;
+$primary-hover: #3B28B3;
+$text-primary: #1A1A2E;
+$text-secondary: #6B7280;
+$border-color: #E6EBF0;    // Sketch: rgba(230, 235, 240, 1)
+$bg-white: #FFFFFF;
+$bg-gray: #F9FAFB;
+$error-color: #DC2626;
+
+$panel-width: 591px;                    // Sketch exact: 591px
+
+// Cursor: standard browser default pointer
+
+// Status colors for pills — Sketch-verified exact values (badge colors)
+$status-open-bg: rgba(224, 247, 250, 1);                  // Sketch: light teal to match open text
+$status-open-text: rgba(0, 176, 191, 1);                  // Sketch exact: (5).variation3.shade1 — teal
+$status-in-progress-bg: rgba(214, 216, 255, 1);    // Sketch exact
+$status-in-progress-text: rgba(62, 64, 219, 1);     // Sketch exact (#3E40DB)
+$status-complete-bg: rgba(225, 255, 204, 1);         // Sketch exact
+$status-complete-text: rgba(8, 162, 104, 1);         // Sketch exact (#08A268)
+$status-blocked-bg: rgba(252, 238, 181, 1);          // Sketch exact
+$status-blocked-text: rgba(177, 54, 0, 1);           // Sketch exact (#B13600)
+
+// ──────────────────────────────────────────────
+// Panel Container
+// ──────────────────────────────────────────────
+
+.slide-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: $panel-width;
+  height: 100vh;                         // Sketch artboard: 1024px; use vh for responsiveness
+  background: rgba(255, 255, 255, 1);    // Sketch exact
+  border-radius: 12px 0 0 12px;         // Sketch exact: 12px 0px 0px 12px
+  box-shadow:
+    0 5px 15px 0 rgba(216, 220, 235, 1),           // Sketch shadow layer 1
+    0 2.5px 3px -1.5px rgba(200, 207, 233, 1),     // Sketch shadow layer 2 (#C8CFE9)
+    0 4.5px 5px -1px rgba(216, 220, 235, 1);       // Sketch shadow layer 3 (#D8DCEB)
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Circular-Std', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  // Slide-in animation
+  animation: slideIn 0.25s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+// ──────────────────────────────────────────────
+// Panel Header
+// ──────────────────────────────────────────────
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px 24px 20px;               // Sketch: buttons at Y:25 → 24px top padding
+  border-bottom: 1px solid $border-color;
+}
+
+.panel-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+// Panel title — Sketch: 20px, Medium (500), rgba(47, 48, 89, 1)
+.panel-title {
+  font-size: 20px;                       // Sketch: 20px
+  font-weight: 500;                      // Sketch: Medium
+  color: rgba(47, 48, 89, 1);           // Sketch exact — #2F3059
+  margin: 0;
+  line-height: 1.2;
+}
+
+// Panel subtitle — Sketch: 16px, Book (400), rgba(104, 113, 150, 1)
+.panel-subtitle {
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(104, 113, 150, 1);        // Sketch exact — #687196
+  margin: 4px 0 0 0;
+}
+
+// ──────────────────────────────────────────────
+// Header Action Buttons (Cancel / Create)
+// ──────────────────────────────────────────────
+
+.panel-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;                               // Sketch: spacing between Cancel & Create
+  flex-shrink: 0;
+}
+
+// Cancel button — Sketch: 66x32, radius 7, white bg, shadow
+.btn-header-cancel {
+  width: 66px;                            // Sketch exact: 66px
+  height: 32px;                           // Sketch exact: 32px
+  border-radius: 7px;                    // Sketch exact: 7px
+  background-color: rgba(255, 255, 255, 1);  // Sketch exact
+  border: 1px solid rgba(255, 255, 255, 1);  // Sketch: Inside border, white
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 1),         // Sketch shadow layer 1
+    0 1px 3px 0 rgba(200, 207, 233, 1);       // Sketch shadow layer 2 (#C8CFE9)
+  font-family: 'Circular-Std', 'Circular Std', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;                        // Sketch: 15px
+  font-weight: 400;                       // Sketch: Book (400)
+  color: $text-primary;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+
+  &:hover {
+    background-color: $bg-gray;
+    box-shadow:
+      0 0 0 1px rgba(230, 235, 240, 1),
+      0 1px 3px 0 rgba(200, 207, 233, 1);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+// Create button — Sketch: primary bg, white text, 15px Book, radius 7
+.btn-header-create {
+  height: 32px;                           // Sketch: same height as Cancel
+  border-radius: 7px;                    // Sketch exact: 7px
+  background-color: $primary;
+  border: none;
+  font-family: 'Circular-Std', 'Circular Std', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;                        // Sketch exact: 15px
+  font-weight: 400;                       // Sketch: CircularStd-Book (400)
+  color: rgba(255, 255, 255, 1);          // Sketch exact: white
+  cursor: pointer;
+  padding: 0 16px;                        // Horizontal padding for text
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+
+  &:hover {
+    background-color: $primary-hover;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+// ──────────────────────────────────────────────
+// Panel Body / Form
+// ──────────────────────────────────────────────
+
+.panel-body {
+  flex: 1;
+  padding: 20px 24px 24px;               // Sketch: 20px top (tighter to separator), 24px sides
+  overflow-y: auto;
+}
+
+.form-field {
+  margin-bottom: 20px;                    // Sketch: tighter spacing between field groups
+}
+
+// Field label — Sketch: 14px, Medium (500), rgba(104, 113, 150, 1)
+.field-label {
+  display: block;
+  font-size: 14px;                        // Sketch: 14px (was 13px)
+  font-weight: 500;
+  color: rgba(104, 113, 150, 1);          // Sketch exact — #687196
+  margin-bottom: 8px;                     // Sketch: 8px (was 6px)
+}
+
+.field-input {
+  width: 100%;
+  padding: 11px 16px;                     // Sketch: input padding
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  font-size: 14px;                        // Sketch exact: 14px
+  font-weight: 500;                       // Sketch exact: CircularStd-Regular (500)
+  font-family: inherit;
+  color: rgba(3, 9, 41, 1);              // Sketch exact: #030929
+  line-height: 17px;                      // Sketch exact: 17px (1.2)
+  background: $bg-white;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #9CA3AF;
+  }
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba($primary, 0.1);
+  }
+
+  &.has-error {
+    border-color: $error-color;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($error-color, 0.1);
+    }
+  }
+}
+
+.field-error {
+  font-size: 12px;
+  color: $error-color;
+  margin-top: 4px;
+  animation: errorFadeIn 0.2s ease-out;
+}
+
+@keyframes errorFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ──────────────────────────────────────────────
+// Status ng-select (pill when collapsed, plain text expanded)
+// ──────────────────────────────────────────────
+
+.status-select {
+  ::ng-deep {
+    .ng-select-container {
+      border: 1px solid $border-color !important;
+      border-radius: 8px !important;
+      min-height: 44px !important;           // Match field-input height
+      background: $bg-white !important;
+      box-shadow: none !important;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+      padding: 0 12px !important;
+
+      &:hover {
+        border-color: #D1D5DB !important;
+      }
+
+      .ng-value-container {
+        padding: 0 !important;
+      }
+    }
+
+    &.ng-select-focused .ng-select-container {
+      border-color: $primary !important;
+      box-shadow: 0 0 0 3px rgba($primary, 0.1) !important;
+    }
+
+    .ng-arrow-wrapper {
+      padding-right: 4px;
+
+      .ng-arrow {
+        border-color: $text-secondary transparent transparent !important;
+      }
+    }
+
+    .ng-dropdown-panel {
+      border: 1px solid $border-color;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      margin-top: 4px;
+      overflow: hidden;
+
+      .ng-dropdown-panel-items {
+        padding: 13px 0 8px;                   // Sketch: first option text at Y:18 (13px + 5px padding)
+
+        .ng-option {
+          font-family: 'Circular-Std', 'Circular Std', -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 14px;                     // Sketch exact: 14px
+          font-weight: 400;                    // Sketch exact: CircularStd-Book (400)
+          line-height: 17px;                   // Sketch exact: 17px (1.2)
+          padding: 5px 12px 6px;               // Sketch: 5px top, 12px horiz, 6px bottom → 28px step (Y:18→46→74)
+          color: rgba(47, 48, 89, 1);          // Sketch exact: #2F3059 — Nao token (0).text-2
+
+          &.ng-option-selected {
+            color: rgba(62, 64, 219, 1);        // Sketch exact: #3E40DB — purple for selected option
+            background: transparent;            // Sketch: no background fill on selected
+            font-weight: 400;                   // Sketch: keep Book weight
+          }
+
+          &.ng-option-marked:not(.ng-option-selected) {
+            background: $bg-gray;              // Hover state for non-selected
+          }
+
+          &.ng-option-marked.ng-option-selected {
+            background: rgba(214, 216, 255, 0.15); // Subtle hover on selected option
+          }
+        }
+      }
+    }
+  }
+
+  &.has-error {
+    ::ng-deep .ng-select-container {
+      border-color: $error-color !important;
+    }
+  }
+}
+
+// Status pill badges (shown when dropdown is collapsed) — Sketch: 22px, 5px radius
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Circular-Std', 'Circular Std', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;                       // Sketch exact: 14px
+  font-weight: 500;                      // Sketch exact: CircularStd-Regular (500)
+  height: 22px;                          // Sketch: 22px
+  padding: 0 8px;
+  border-radius: 5px;                   // Sketch: 5px
+  text-align: center;                    // Sketch: center aligned
+
+  &.status-open {
+    background: $status-open-bg;
+    color: $status-open-text;
+  }
+
+  &.status-in-progress {
+    background: $status-in-progress-bg;
+    color: $status-in-progress-text;
+  }
+
+  &.status-complete {
+    background: $status-complete-bg;
+    color: $status-complete-text;
+  }
+
+  &.status-blocked {
+    background: $status-blocked-bg;
+    color: $status-blocked-text;
+  }
+}
+
+// ──────────────────────────────────────────────
+// Date Picker
+// ──────────────────────────────────────────────
+
+.date-input-wrapper {
+  position: relative;
+
+  &.has-error .date-input {
+    border-color: $error-color;
+  }
+}
+
+.date-input {
+  cursor: pointer;
+}
+
+// Style the ngb-datepicker popup
+::ng-deep {
+  ngb-datepicker {
+    border: 1px solid $border-color !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    font-family: 'Circular-Std', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  }
+
+  .ngb-dp-header {
+    padding: 8px !important;
+    background: $bg-white !important;
+  }
+
+  .ngb-dp-weekday {
+    color: $text-secondary !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+  }
+
+  .ngb-dp-day .btn-light {
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    color: $text-primary !important;
+
+    &:hover {
+      background: #F3F0FF !important;
+    }
+
+    &.bg-primary {
+      background: $primary !important;
+      color: white !important;
+    }
+  }
+
+  .ngb-dp-navigation-chevron {
+    color: $text-primary !important;
+  }
+
+  .ngb-dp-arrow-btn {
+    &:hover {
+      background: $bg-gray !important;
+      border-radius: 6px;
+    }
+  }
+}
+
+// ──────────────────────────────────────────────
+// Overlap Error
+// ──────────────────────────────────────────────
+
+.overlap-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  animation: errorShake 0.4s ease-out;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  span {
+    font-size: 13px;
+    color: #991B1B;
+    line-height: 1.4;
+  }
+}
+
+@keyframes errorShake {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-6px); }
+  40%  { transform: translateX(5px); }
+  60%  { transform: translateX(-3px); }
+  80%  { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+// Old bottom action buttons removed — buttons now live in .panel-header-actions
