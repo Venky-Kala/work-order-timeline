@@ -1,0 +1,207 @@
+<!-- Main container - listens for outside clicks to close menus, Escape to close dropdown -->
+<div class="timeline-container" (click)="onDocumentClick($event)" (keydown)="onContainerKeydown($event)">
+
+  <!-- Header: Title + Timescale dropdown -->
+  <div class="timeline-top">
+    <h1 class="timeline-title">Work Orders</h1>
+    <div class="timescale-control">
+      <span class="timescale-label">Timescale</span>
+      <ng-select
+        class="timescale-select"
+        [items]="zoomOptions"
+        bindLabel="label"
+        bindValue="value"
+        [(ngModel)]="zoomLevel"
+        (ngModelChange)="onZoomChange($event)"
+        [clearable]="false"
+        [searchable]="false"
+        appearance="outline"
+        aria-label="Timescale zoom level">
+      </ng-select>
+    </div>
+  </div>
+
+  <!-- Timeline Table -->
+  <div class="timeline-table" role="grid" aria-label="Work order schedule timeline">
+    <!-- Table Header Row -->
+    <div class="timeline-header-row" role="row">
+      <div class="work-center-header" role="columnheader">Work Center</div>
+      <div class="date-header-scroll" #headerScrollContainer>
+        <div class="date-header-track" [style.width.px]="totalWidth">
+          <div
+            *ngFor="let col of columns; trackBy: trackByColumn"
+            class="date-header-cell"
+            [style.width.px]="columnWidth"
+            [class.is-current-month]="col.isCurrentMonth"
+            [class.is-today]="col.isToday">
+            <span class="date-label">{{ col.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Work Center Rows -->
+    <div class="timeline-body">
+      <!-- Fixed left column: work center names -->
+      <div class="work-center-column">
+        <div
+          *ngFor="let center of workCenters; trackBy: trackByCenter; let first = first"
+          class="work-center-cell"
+          [class.first-row]="first"
+          [class.hovered]="hoveredRowId === center.docId"
+          (mouseenter)="onRowHover(center.docId)"
+          (mouseleave)="onRowHover(null)">
+          {{ center.data.name }}
+        </div>
+        <!-- Empty fill area below data rows -->
+        <div class="work-center-fill"></div>
+      </div>
+
+      <!-- Scrollable grid area -->
+      <div
+        class="grid-scroll-container"
+        #gridScrollContainer
+        (scroll)="onGridScroll()"
+        (mousemove)="onGridMouseMove($event)"
+        (mouseleave)="onGridMouseLeave()">
+
+        <div class="grid-track" [style.width.px]="totalWidth">
+          <!-- Today indicator line -->
+          <div
+            class="today-indicator"
+            [style.left.px]="todayOffset">
+          </div>
+
+          <!-- Current month badge (floats above first row, month zoom only) -->
+          <div
+            *ngIf="zoomLevel === 'month' && currentMonthBadgeLeft >= 0"
+            class="badge-overlay"
+            aria-hidden="true"
+            [style.left.px]="currentMonthBadgeLeft"
+            [style.width.px]="columnWidth">
+            <span class="current-month-badge">Current month</span>
+          </div>
+
+          <!-- Grid rows -->
+          <div
+            *ngFor="let center of workCenters; trackBy: trackByCenter; let first = first"
+            class="grid-row"
+            [class.first-row]="first"
+            [class.hovered]="hoveredRowId === center.docId"
+            tabindex="0"
+            role="row"
+            [attr.aria-label]="'Add work order to ' + center.data.name"
+            (mouseenter)="onRowHover(center.docId)"
+            (mouseleave)="onRowHover(null)"
+            (focus)="onRowHover(center.docId)"
+            (blur)="onRowHover(null)"
+            (click)="onGridClick($event, center)"
+            (keydown.enter)="onGridRowKeydown($event, center)"
+            (keydown.space)="onGridRowKeydown($event, center)">
+
+            <!-- Grid vertical lines (column borders) -->
+            <div class="grid-columns-bg" aria-hidden="true">
+              <div
+                *ngFor="let col of columns; trackBy: trackByColumn"
+                class="grid-column-line"
+                [style.width.px]="columnWidth">
+              </div>
+            </div>
+
+            <!-- Work order bars -->
+            <div
+              *ngFor="let order of getOrdersForCenter(center.docId); trackBy: trackByOrder"
+              class="work-order-bar"
+              [class]="'work-order-bar ' + getStatusClass(order.data.status) + (activeMenuOrderId === order.docId ? ' menu-active' : '')"
+              [style.left.px]="getBarLeft(order)"
+              [style.width.px]="getBarWidth(order)"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="order.data.name + ', ' + getStatusLabel(order.data.status)"
+              (keydown)="onBarKeydown($event, order)">
+
+              <span class="bar-name">{{ order.data.name }}</span>
+              <span class="bar-status-badge" [class]="getStatusClass(order.data.status)">
+                {{ getStatusLabel(order.data.status) }}
+              </span>
+
+              <!-- Three-dot actions menu -->
+              <div class="actions-menu"
+                [class.has-focus]="activeMenuOrderId === order.docId">
+                <button
+                  class="actions-trigger"
+                  (click)="toggleActionsMenu($event, order.docId)"
+                  (keydown)="onMenuTriggerKeydown($event, order.docId)"
+                  [attr.aria-expanded]="activeMenuOrderId === order.docId"
+                  aria-haspopup="true"
+                  [attr.aria-label]="'Actions for ' + order.data.name">
+                  <span class="dot" aria-hidden="true"></span>
+                  <span class="dot" aria-hidden="true"></span>
+                  <span class="dot" aria-hidden="true"></span>
+                </button>
+
+                <div
+                  *ngIf="activeMenuOrderId === order.docId"
+                  class="actions-dropdown"
+                  role="menu"
+                  [attr.aria-label]="'Actions for ' + order.data.name"
+                  (keydown)="onMenuKeydown($event, order)">
+                  <button class="action-item" role="menuitem" [attr.aria-label]="'Edit ' + order.data.name" (click)="onEditOrder($event, order)">Edit</button>
+                  <button class="action-item action-delete" role="menuitem" [attr.aria-label]="'Delete ' + order.data.name" (click)="onDeleteOrder($event, order.docId)">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty fill area below data rows with vertical column lines -->
+          <div class="grid-fill" aria-hidden="true">
+            <div class="grid-columns-bg">
+              <div
+                *ngFor="let col of columns; trackBy: trackByColumn"
+                class="grid-column-line"
+                [style.width.px]="columnWidth">
+              </div>
+            </div>
+          </div>
+
+          <!-- Hover placeholder box (Sketch: 113×38px, appears on empty grid space) -->
+          <div
+            *ngIf="hoverPlaceholder.visible"
+            class="hover-placeholder"
+            aria-hidden="true"
+            [style.left.px]="hoverPlaceholder.x"
+            [style.top.px]="hoverPlaceholder.y">
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- "Click to add dates" tooltip — position:fixed, never clipped by overflow -->
+  <div
+    *ngIf="hoverTooltip.visible"
+    class="add-tooltip"
+    role="tooltip"
+    aria-hidden="true"
+    [style.left.px]="hoverTooltip.x"
+    [style.top.px]="hoverTooltip.y">
+    {{ hoverTooltip.text }}
+  </div>
+</div>
+
+<!-- Overlay when panel is open -->
+<div
+  *ngIf="panelOpen"
+  class="panel-overlay"
+  (click)="onPanelClose()">
+</div>
+
+<!-- Slide-out panel for create/edit -->
+<app-slide-panel
+  *ngIf="panelOpen && panelConfig"
+  [config]="panelConfig"
+  [workCenters]="workCenters"
+  (close)="onPanelClose()"
+  (save)="onPanelSave($event)">
+</app-slide-panel>

@@ -1,0 +1,749 @@
+// ──────────────────────────────────────────────
+// Design Tokens (Sketch-verified)
+// ──────────────────────────────────────────────
+
+// Brand colors
+$primary: #4C35E0;
+$primary-light: #ECEAFD;
+
+// Text colors
+$text-primary: #1A1A2E;
+$text-secondary: #6B7280;
+
+// Surfaces & borders
+$border-color: #E6EBF0;
+$bg-white: #FFFFFF;
+$bg-gray: #F9FAFB;
+
+// Status — bar backgrounds & borders
+$status-open-bar-bg: #DBEAFE;
+$status-open-bar-border: rgba(147, 197, 253, 1);
+$status-in-progress-bar-bg: rgba(237, 238, 255, 1);
+$status-in-progress-bar-border: rgba(222, 224, 255, 1);
+$status-complete-bar-bg: rgba(248, 255, 243, 1);
+$status-complete-bar-border: rgba(209, 250, 179, 1);
+$status-blocked-bar-bg: rgba(255, 252, 241, 1);
+$status-blocked-bar-border: rgba(255, 245, 207, 1);
+
+// Status — badge backgrounds & text
+$status-open-badge-bg: #DBEAFE;
+$status-open-badge-text: #2563EB;
+$status-in-progress-badge-bg: rgba(214, 216, 255, 1);
+$status-in-progress-badge-text: rgba(62, 64, 219, 1);
+$status-complete-badge-bg: rgba(225, 255, 204, 1);
+$status-complete-badge-text: rgba(8, 162, 104, 1);
+$status-blocked-badge-bg: rgba(252, 238, 181, 1);
+$status-blocked-badge-text: rgba(177, 54, 0, 1);
+
+// Layout
+$work-center-width: 380px;
+$row-height: 48px;
+$header-height: 44px;
+
+// Font stack (reusable)
+$font-stack: 'Circular-Std', 'Circular Std', -apple-system, BlinkMacSystemFont, sans-serif;
+
+// Cursor: standard browser default pointer
+
+// ──────────────────────────────────────────────
+// Main Container
+// ──────────────────────────────────────────────
+
+.timeline-container {
+  font-family: $font-stack;
+  background: $bg-white;
+  min-height: 100vh;
+  padding: 0;
+  color: $text-primary;
+  display: flex;
+  flex-direction: column;
+}
+
+// ──────────────────────────────────────────────
+// Title + Timescale
+// ──────────────────────────────────────────────
+
+.timeline-top {
+  margin-bottom: 20px;
+}
+
+.timeline-title {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 34px;
+  letter-spacing: normal;
+  color: #030929;
+  margin: 0 0 26px 0;
+}
+
+.timescale-control {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  gap: 0;
+  height: 25px;
+  position: relative;
+
+  .timescale-label {
+    display: flex;
+    align-items: center;
+    width: 75px;
+    height: 25px;
+    background: rgba(241, 243, 248, 0.75);
+    border-radius: 5px 0 0 5px;
+    padding: 0 8px;
+    flex-shrink: 0;
+    font-weight: 400 !important;
+    font-size: 13px !important;
+    line-height: 16px !important;
+    letter-spacing: 0 !important;
+    color: #687196 !important;
+    white-space: nowrap;
+  }
+
+  .timescale-select {
+    width: 71px;                    /* Sketch: 71px fixed */
+    flex: none;
+
+    ::ng-deep {
+      .ng-select-container {
+        border: none !important;
+        background: transparent !important;
+        min-height: 25px !important;
+        height: 25px !important;
+        width: 71px !important;
+        border-radius: 0 5px 5px 0 !important;   /* Sketch: rounded right side only */
+        box-shadow: none !important;
+        cursor: pointer !important;
+
+        .ng-value-container {
+          padding: 0 0 0 8px !important;           /* Left padding for text centering */
+
+          .ng-value {
+            font-weight: 500 !important;
+            font-size: 13px !important;
+            line-height: 25px !important;          /* Match container height for vertical centering */
+            letter-spacing: 0 !important;
+            color: #3E40DB !important;
+            cursor: pointer !important;
+          }
+        }
+
+        .ng-input > input {
+          cursor: pointer !important;
+        }
+      }
+
+      .ng-arrow-wrapper {
+        // Sketch: arrow at 54.53px from left, 8px from right edge of 71px container
+        width: auto !important;
+        padding-left: 7px !important;
+        padding-right: 8px !important;             /* Sketch: 8px right spacing */
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+
+        .ng-arrow {
+          // Nao_Icons/Line/Arrow/Simple/Down — 5×8.47 rotated 270°
+          // Rendered: ~8.47px wide × 5px tall; 6×6 box → 6√2 ≈ 8.49px visual width
+          border: 0 !important;
+          width: 6px !important;
+          height: 6px !important;
+          display: inline-block !important;
+          border-bottom: 2px solid rgba(200, 207, 233, 1) !important;
+          border-right: 2px solid rgba(200, 207, 233, 1) !important;
+          transform: rotate(45deg) !important;
+          position: relative !important;
+          top: -1px !important;
+          transition: transform 0.2s ease !important;
+        }
+      }
+
+      // When dropdown is open, flip arrow to point up
+      .ng-select-opened .ng-arrow-wrapper .ng-arrow {
+        transform: rotate(-135deg) !important;
+        top: 1px !important;
+      }
+
+      .ng-dropdown-panel {
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        margin-top: 6px;
+        overflow: hidden;
+        width: 200px !important;
+        left: -75px !important;
+
+        .ng-dropdown-panel-items {
+          max-height: 128px !important;
+          padding: 4px 0;
+
+          .ng-option {
+            font-size: 14px;
+            padding: 5px 16px;
+            color: $text-primary;
+            font-weight: 400;
+            line-height: 22px;
+            cursor: pointer;
+
+            &.ng-option-selected {
+              background: transparent;
+              color: #3E40DB;
+              font-weight: 500;
+            }
+
+            &.ng-option-marked:not(.ng-option-selected) {
+              background: $bg-gray;
+            }
+
+            &.ng-option-selected.ng-option-marked {
+              background: rgba($primary, 0.04);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// ──────────────────────────────────────────────
+// Timeline Table
+// ──────────────────────────────────────────────
+
+.timeline-table {
+  border-top: 1px solid $border-color;
+  border-bottom: 1px solid $border-color;
+  border-left: 1px solid $border-color;
+  overflow: hidden;
+  background: $bg-white;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+// ──────────────────────────────────────────────
+// Header Row
+// ──────────────────────────────────────────────
+
+.timeline-header-row {
+  display: flex;
+  background: $bg-white;
+}
+
+.work-center-header {
+  flex: 0 0 $work-center-width;
+  padding: 8px 32px 9px 31px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
+  letter-spacing: normal;
+  color: #687196;
+  border-right: 1px solid $border-color;
+  border-bottom: 1px solid $border-color;
+  display: flex;
+  align-items: flex-end;
+}
+
+.date-header-scroll {
+  flex: 1;
+  overflow: hidden;
+  border-bottom: 1px solid $border-color;
+}
+
+.date-header-track {
+  display: flex;
+}
+
+.date-header-cell {
+  flex: 0 0 auto;
+  padding: 8px 12px 9px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
+  letter-spacing: normal;
+  color: #687196;
+  text-align: center;
+  border-right: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  position: relative;
+  min-height: $header-height;
+
+  &.is-current-month {
+    .date-label {
+      font-weight: 500;
+      color: #687196;
+    }
+  }
+}
+
+.current-month-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212, 215, 255, 1);
+  color: rgba(62, 64, 219, 1);
+  font-size: 14px;
+  font-weight: 400;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.date-label {
+  white-space: nowrap;
+}
+
+// ──────────────────────────────────────────────
+// Current Month Badge Overlay (month zoom only)
+// ──────────────────────────────────────────────
+
+.badge-overlay {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+// ──────────────────────────────────────────────
+// Timeline Body
+// ──────────────────────────────────────────────
+
+.timeline-body {
+  display: flex;
+  flex: 1;
+}
+
+.work-center-column {
+  flex: 0 0 $work-center-width;
+  border-right: 1px solid $border-color;
+  z-index: 2;
+  background: $bg-white;
+  display: flex;
+  flex-direction: column;
+}
+
+.work-center-fill {
+  flex: 1;
+}
+
+.work-center-cell {
+  height: $row-height;
+  padding: 0 32px 0 31px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
+  letter-spacing: normal;
+  color: #030929;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: $bg-white;
+  transition: background-color 0.15s ease;
+  // Inset shadow draws the separator INSIDE the cell — cannot double-up with neighbours
+  box-shadow: inset 0 -1px 0 0 rgba(230, 235, 240, 1);
+
+  &.hovered {
+    background-color: $primary-light;
+  }
+
+  &.first-row {
+    height: 60px;
+    padding: 28px 32px 16px 31px;
+    align-items: flex-start;
+    // Sketch Line 3: 380×1px at Y:346, border 1px solid rgba(230, 235, 240, 1)
+    // Separator stays on the work-center side only (380px); grid-row.first-row keeps box-shadow:none
+    box-shadow: inset 0 -1px 0 0 rgba(230, 235, 240, 1);
+  }
+}
+
+// ──────────────────────────────────────────────
+// Scrollable Grid
+// ──────────────────────────────────────────────
+
+.grid-scroll-container {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  cursor: pointer;
+  background-color: #F7F9FC;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $bg-gray;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #D1D5DB;
+    border-radius: 3px;
+
+    &:hover {
+      background: #9CA3AF;
+    }
+  }
+}
+
+.grid-track {
+  position: relative;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-fill {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+
+  .grid-columns-bg {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+}
+
+.grid-row {
+  height: $row-height;
+  position: relative;
+  transition: background-color 0.15s ease;
+  cursor: pointer;
+  // No horizontal separators in the grid area — separators live only in the work-center column
+  box-shadow: none;
+  outline: none;
+
+  &.first-row {
+    height: 60px;
+  }
+
+  &.hovered {
+    background-color: $primary-light;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary;
+    outline-offset: -2px;
+    z-index: 2;
+    background-color: rgba($primary-light, 0.5);
+  }
+}
+
+.grid-columns-bg {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.grid-column-line {
+  flex: 0 0 auto;
+  border-right: 1px solid $border-color;
+  height: 100%;
+}
+
+// ──────────────────────────────────────────────
+// Today Indicator
+// ──────────────────────────────────────────────
+
+.today-indicator {
+  // Hidden — the darker vertical line under "Current month" badge is not in the Sketch design
+  display: none;
+}
+
+// ──────────────────────────────────────────────
+// Hover Placeholder Box (Sketch-verified)
+// ──────────────────────────────────────────────
+
+.hover-placeholder {
+  position: absolute;
+  width: 113px;
+  height: 38px;
+  border: 1px solid rgba(195, 199, 255, 1);
+  border-radius: 8px;
+  background-color: rgba(101, 112, 255, 0.1);
+  pointer-events: none;
+  z-index: 0;             // Below work-order bars (z-index: 1)
+  animation: placeholderFadeIn 0.15s ease-out;
+}
+
+@keyframes placeholderFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+// ──────────────────────────────────────────────
+// Work Order Bars
+// ──────────────────────────────────────────────
+
+.work-order-bar {
+  position: absolute;
+  top: 7px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  cursor: pointer;
+  overflow: visible;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  z-index: 1;
+  min-width: 40px;
+  border: none;
+
+  &.status-open {
+    background: $status-open-bar-bg;
+    box-shadow: 0 0 0 1px $status-open-bar-border;
+    &:hover { box-shadow: 0 0 0 1px $status-open-bar-border, 0 4px 12px rgba(0, 0, 0, 0.12); transform: translateY(-1px); }
+  }
+
+  &.status-in-progress {
+    background: $status-in-progress-bar-bg;
+    box-shadow: 0 0 0 1px $status-in-progress-bar-border;
+    &:hover { box-shadow: 0 0 0 1px $status-in-progress-bar-border, 0 4px 12px rgba(0, 0, 0, 0.12); transform: translateY(-1px); }
+  }
+
+  &.status-complete {
+    background: $status-complete-bar-bg;
+    box-shadow: 0 0 0 1px $status-complete-bar-border;
+    &:hover { box-shadow: 0 0 0 1px $status-complete-bar-border, 0 4px 12px rgba(0, 0, 0, 0.12); transform: translateY(-1px); }
+  }
+
+  &.status-blocked {
+    background: $status-blocked-bar-bg;
+    box-shadow: 0 0 0 1px $status-blocked-bar-border;
+    &:hover { box-shadow: 0 0 0 1px $status-blocked-bar-border, 0 4px 12px rgba(0, 0, 0, 0.12); transform: translateY(-1px); }
+  }
+
+  &:hover {
+    .actions-menu { opacity: 1; }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary;
+    outline-offset: -2px;
+    z-index: 2;
+    .actions-menu { opacity: 1; }
+  }
+
+  &.menu-active {
+    z-index: 50;
+  }
+}
+
+.bar-name {
+  font-size: 14px;
+  font-weight: 400;
+  color: #030929;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.bar-status-badge {
+  font-size: 14px;
+  font-weight: 400;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+
+  &.status-open { background: $status-open-badge-bg; color: $status-open-badge-text; }
+  &.status-in-progress { background: $status-in-progress-badge-bg; color: $status-in-progress-badge-text; }
+  &.status-complete { background: $status-complete-badge-bg; color: $status-complete-badge-text; }
+  &.status-blocked { background: $status-blocked-badge-bg; color: $status-blocked-badge-text; }
+}
+
+// ──────────────────────────────────────────────
+// Actions Menu (three-dot)
+// ──────────────────────────────────────────────
+
+.actions-menu {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  position: relative;
+  flex-shrink: 0;
+
+  &.has-focus {
+    opacity: 1;
+  }
+}
+
+.actions-trigger {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 6px;
+  border: none;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary;
+    outline-offset: 1px;
+  }
+
+  .dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: $text-secondary;
+  }
+}
+
+.actions-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  width: 200px;
+  height: 80px;
+  background: $bg-white;
+  border-radius: 5px;
+  box-shadow:
+    0 0 0 1px rgba(104, 113, 150, 0.1),
+    0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
+    0 4.5px 5px -1px rgba(216, 220, 235, 1);
+  z-index: 100;
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  animation: dropdownSlideIn 0.12s ease-out;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 12px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(47, 48, 89, 1);
+  cursor: pointer;
+  transition: background 0.1s ease;
+  font-family: inherit;
+  height: 28px;
+  outline: none;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(164, 170, 192, 0.08);
+  }
+
+  &:focus-visible {
+    box-shadow: inset 2px 0 0 0 $primary;
+  }
+
+  &.action-delete {
+    color: rgba(62, 64, 219, 1);
+  }
+}
+
+// ──────────────────────────────────────────────
+// Tooltip  (Sketch: 114×18 text, padding 4/8, pill, dark bg, no arrow)
+// ──────────────────────────────────────────────
+
+.add-tooltip {
+  position: fixed;
+  // Center horizontally on anchor point, shift up so bottom edge sits above placeholder
+  transform: translate(-50%, -100%);
+  background: rgba(47, 48, 89, 0.92);          // Dark navy, slight translucency
+  color: rgba(249, 250, 255, 1);               // Sketch: near-white
+  font-family: $font-stack;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;                            // Sketch: 18px text height
+  padding: 4px 8px;                             // Sketch: 4px top/bottom, 8px left/right
+  border-radius: 13px;                          // Pill shape (half of 26px total height)
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 50;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+
+  // Fade-in animation
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -100%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%) translateY(0);
+  }
+}
+
+// ──────────────────────────────────────────────
+// Overlay
+// ──────────────────────────────────────────────
+
+.panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);        // Sketch: slightly lighter overlay
+  z-index: 900;
+  animation: overlayFadeIn 0.25s ease-out;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// ──────────────────────────────────────────────
+// Responsive
+// ──────────────────────────────────────────────
+
+@media (max-width: 1024px) {
+  .timeline-container {
+    padding: 24px 0 0 0;
+  }
+}
