@@ -1,0 +1,48 @@
+/* Global Styles - Naologic Work Order Timeline */
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Circular-Std', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #FFFFFF;
+  color: #1A1A2E;
+}
+
+/* Cursor: standard browser default pointer */
+
+/* ──────────────────────────────────────────────
+   Global cursor overrides for ng-select library
+   (ng-select uses ViewEncapsulation.None, so its
+   cursor:default rules leak globally)
+   ────────────────────────────────────────────── */
+.ng-select .ng-select-container {
+  cursor: pointer !important;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-input > input {
+  cursor: pointer !important;
+}
+
+.ng-select .ng-arrow-wrapper {
+  cursor: pointer !important;
+}
+
+.ng-select .ng-clear-wrapper {
+  cursor: pointer !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  cursor: pointer !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.disabled {
+  cursor: default !important;
+}
